@@ -16,7 +16,6 @@ namespace ClientWindowsForms
     {
         HubConnection hubConnection;
         IHubProxy hubProxy;
-        SynchronizationContext context;
 
         public Form1()
         {
@@ -24,13 +23,8 @@ namespace ClientWindowsForms
 
             hubConnection = new HubConnection("http://localhost:51188/signalr");
             hubProxy = hubConnection.CreateHubProxy("MyHub");
-            context = SynchronizationContext.Current;
-
-            hubProxy.On<string>("sendMessageClient", (message) =>
-              context.Post(delegate
-              {
-                  txtMessages.Text += message + Environment.NewLine;
-              }, null));
+            
+            hubProxy.On<string>("sendMessageClient", (message) => txtMessage.Invoke(new Action(() => txtMessages.Text += message + Environment.NewLine)));
             hubConnection.Start();
         }
 
