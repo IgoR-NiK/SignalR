@@ -1,0 +1,137 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Рисовалка</title>
+    <style>
+        canvas {
+            position: relative;
+            background-color: #f2e4e4;
+        }
+    </style>
+</head>
+<body>
+    @Html.ActionLink("Перейти в чат", "Index", "Home")
+
+    <p><b>Область для рисования</b></p>
+    <canvas id='drawingpad' width='500' height='500'></canvas>
+
+    <pre />
+
+    <label for="favcolor">Выбрать цвет пера</label>
+    <input type="color" id="favcolor" name="favcolor"  />
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <!--Ссылка на библиотеку SignalR -->
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+
+    <!--Ссылка на автоматически сгенерированный скрипт хаба SignalR -->
+    <script src="~/signalr/hubs"></script>
+
+    <script>
+        $(function () {
+            var drawGame = {
+
+                // указывает, происходит ли отрисовка
+                isDrawing: false,
+
+                // начальная точка следующей линии
+                startX: 0,
+                startY: 0,
+            };
+
+            // модель линий
+            var data = {
+                startX: 0,
+                startY: 0,
+                endX: 0,
+                endY: 0,
+                color: "#000000"
+            };
+
+            // контекст элемента canvas
+            var canvas = document.getElementById('drawingpad');
+            var ctx = canvas.getContext('2d');
+
+            // Ссылка на автоматически-сгенерированный прокси хаба
+            var chat = $.connection.myHub;
+
+            // Открываем соединение
+            $.connection.hub.start().done(function () {
+
+                // после открытия соединения устанавливаем обработчики мыши
+                canvas.addEventListener("mousedown", mousedown, false);
+                canvas.addEventListener("mousemove", mousemove, false);
+                canvas.addEventListener("mouseup", mouseup, false);
+            });
+
+            // Функция, которую вызывает хаб
+            chat.client.drawClient = function (data) {
+
+                // Добавление линий
+                drawLine(ctx, data.startX, data.startY, data.endX, data.endY, 1, data.color);
+            };
+            
+            // просто рисуем линию
+            function drawLine(ctx, x1, y1, x2, y2, thickness, color) {
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineWidth = thickness;
+                ctx.strokeStyle = color;
+                ctx.stroke();
+            }
+
+            // нажите мыши
+            function mousedown(e) {
+
+                // получаем позиции x и y относительно верхнего левого угла элемента canvas
+                var mouseX = e.layerX || 0;
+                var mouseY = e.layerY || 0;
+                drawGame.startX = mouseX;
+                drawGame.startY = mouseY;
+                drawGame.isDrawing = true;
+            };
+
+            // перемещение мыши
+            function mousemove(e) {
+
+                // рисуем линию, если isdrawing==true
+                if (drawGame.isDrawing) {
+
+                    // получаем позиции x и y относительно верхнего левого угла элемента canvas
+                    var mouseX = e.layerX || 0;
+                    var mouseY = e.layerY || 0;
+                    if (!(mouseX == drawGame.startX &&
+                        mouseY == drawGame.startY)) {
+                        drawLine(ctx, drawGame.startX,
+                            drawGame.startY, mouseX, mouseY, 1, data.color);
+
+                        data.startX = drawGame.startX;
+                        data.startY = drawGame.startY;
+                        data.endX = mouseX;
+                        data.endY = mouseY;
+
+                        chat.server.drawServer(data);
+
+                        drawGame.startX = mouseX;
+                        drawGame.startY = mouseY;
+                    }
+                }
+            };
+
+            function mouseup(e) {
+                drawGame.isDrawing = false;
+            }
+
+            $("#favcolor").change(function () {
+                data.color = $(this).val();
+            });
+        });
+    </script>
+</body>
+</html>

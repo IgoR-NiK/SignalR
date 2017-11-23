@@ -12,5 +12,10 @@ namespace Server.Controllers
         {
             return View();
         }
+
+        public ActionResult Paint()
+        {
+            return View();
+        }
     }
 }

@@ -5,6 +5,8 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 
+using Server.Models;
+
 namespace Server.Hubs
 {
     public class MyHub : Hub
@@ -12,6 +14,11 @@ namespace Server.Hubs
         public void SendMessageServer(string message)
         {
             Clients.All.sendMessageClient(message);
+        }
+
+        public void DrawServer(Data data)
+        {
+            Clients.AllExcept(Context.ConnectionId).drawClient(data);
         }
     }
 }

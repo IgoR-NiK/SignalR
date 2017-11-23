@@ -8,13 +8,13 @@
     <title>Обмен сообщениями в режиме реального времени</title>
 </head>
 <body>
+    <p>@Html.ActionLink("Перейти в режим рисования", "Paint", "Home")</p>
+    
     <div id="inputForm">
         <input type="text" id="message" />
         <input type="button" id="sendmessage" value="Отправить" />
-    </div>
-    <div>
-        <p><b>Сообщения</b></p>
-    </div>
+    </div>    
+    <p><b>Сообщения</b></p>    
     <div id="messages"></div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
