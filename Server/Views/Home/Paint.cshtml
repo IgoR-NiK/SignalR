@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Рисовалка</title>
+    <title>Рисование</title>
     <style>
         canvas {
             position: relative;
@@ -17,7 +17,7 @@
     @Html.ActionLink("Перейти в чат", "Index", "Home")
 
     <p><b>Область для рисования</b></p>
-    <canvas id='drawingpad' width='500' height='500'></canvas>
+    <canvas id='drawingpad' width='400' height='400'></canvas>
 
     <pre />
 
@@ -50,7 +50,7 @@
                 startY: 0,
                 endX: 0,
                 endY: 0,
-                color: "#000000"
+                colorPen: "#000000"
             };
 
             // контекст элемента canvas
@@ -73,16 +73,16 @@
             chat.client.drawClient = function (data) {
 
                 // Добавление линий
-                drawLine(ctx, data.startX, data.startY, data.endX, data.endY, 1, data.color);
+                drawLine(ctx, data.startX, data.startY, data.endX, data.endY, 1, data.colorPen);
             };
             
             // просто рисуем линию
-            function drawLine(ctx, x1, y1, x2, y2, thickness, color) {
+            function drawLine(ctx, x1, y1, x2, y2, thickness, colorPen) {
                 ctx.beginPath();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
                 ctx.lineWidth = thickness;
-                ctx.strokeStyle = color;
+                ctx.strokeStyle = colorPen;
                 ctx.stroke();
             }
 
@@ -109,7 +109,7 @@
                     if (!(mouseX == drawGame.startX &&
                         mouseY == drawGame.startY)) {
                         drawLine(ctx, drawGame.startX,
-                            drawGame.startY, mouseX, mouseY, 1, data.color);
+                            drawGame.startY, mouseX, mouseY, 1, data.colorPen);
 
                         data.startX = drawGame.startX;
                         data.startY = drawGame.startY;
@@ -129,7 +129,7 @@
             }
 
             $("#favcolor").change(function () {
-                data.color = $(this).val();
+                data.colorPen = $(this).val();
             });
         });
     </script>

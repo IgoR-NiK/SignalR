@@ -20,7 +20,7 @@ namespace Server.Models
         [JsonProperty("endY")]
         public float EndY { get; set; }
 
-        [JsonProperty("color")]
-        public string Color { get; set; }
+        [JsonProperty("colorPen")]
+        public string ColorPen { get; set; }
     }
 }
