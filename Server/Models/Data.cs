@@ -22,5 +22,8 @@ namespace Server.Models
 
         [JsonProperty("colorPen")]
         public string ColorPen { get; set; }
+
+        [JsonProperty("timeDelta")]
+        public int TimeDelta { get; set; }
     }
 }

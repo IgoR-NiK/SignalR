@@ -16,9 +16,9 @@ namespace Server.Hubs
             Clients.All.sendMessageClient(message);
         }
 
-        public void DrawServer(Data data)
+        public void DrawServer(List<Data> points)
         {
-            Clients.AllExcept(Context.ConnectionId).drawClient(data);
+            Clients.AllExcept(Context.ConnectionId).drawClient(points);
         }
     }
 }

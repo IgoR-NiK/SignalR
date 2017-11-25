@@ -37,22 +37,22 @@
         $(function () {
             var drawGame = {
 
+                // Массив всех точек которые нужно передать на сервер
+                points: [],
+
                 // указывает, происходит ли отрисовка
                 isDrawing: false,
+
+                // Цвет пера
+                colorPen: "#000000",
+
+                // Время рисования следующей точки
+             //   time: new Date(),
 
                 // начальная точка следующей линии
                 startX: 0,
                 startY: 0,
-            };
-
-            // модель линий
-            var data = {
-                startX: 0,
-                startY: 0,
-                endX: 0,
-                endY: 0,
-                colorPen: "#000000"
-            };
+            };            
 
             // контекст элемента canvas
             var canvas = document.getElementById('drawingpad');
@@ -68,13 +68,22 @@
                 canvas.addEventListener("mousedown", mousedown, false);
                 canvas.addEventListener("mousemove", mousemove, false);
                 canvas.addEventListener("mouseup", mouseup, false);
+                setInterval(updateServerModel, 100);
             });
 
-            // Функция, которую вызывает хаб
-            chat.client.drawClient = function (data) {
+            function updateServerModel() {
+                if (drawGame.points.length > 0) {
+                    chat.server.drawServer(drawGame.points);
+                    drawGame.points = [];
+                }
+            }
 
+            // Функция, которую вызывает хаб
+            chat.client.drawClient = function (e) {
                 // Добавление линий
-                drawLine(ctx, data.startX, data.startY, data.endX, data.endY, 1, data.colorPen);
+                for (var point in e) {
+                    drawLine(ctx, e[point].startX, e[point].startY, e[point].endX, e[point].endY, 1, e[point].colorPen);
+                }
             };
             
             // просто рисуем линию
@@ -91,10 +100,8 @@
             function mousedown(e) {
 
                 // получаем позиции x и y относительно верхнего левого угла элемента canvas
-                var mouseX = e.layerX || 0;
-                var mouseY = e.layerY || 0;
-                drawGame.startX = mouseX;
-                drawGame.startY = mouseY;
+                drawGame.startX = e.layerX || 0;
+                drawGame.startY = e.layerY || 0;
                 drawGame.isDrawing = true;
             };
 
@@ -107,20 +114,27 @@
                     // получаем позиции x и y относительно верхнего левого угла элемента canvas
                     var mouseX = e.layerX || 0;
                     var mouseY = e.layerY || 0;
+                //    var time = new Date();
                     if (!(mouseX == drawGame.startX &&
                         mouseY == drawGame.startY)) {
                         drawLine(ctx, drawGame.startX,
-                            drawGame.startY, mouseX, mouseY, 1, data.colorPen);
+                            drawGame.startY, mouseX, mouseY, 1, drawGame.colorPen);
 
-                        data.startX = drawGame.startX;
-                        data.startY = drawGame.startY;
-                        data.endX = mouseX;
-                        data.endY = mouseY;
+                        // модель линий
+                        var data = {
+                            startX: drawGame.startX,
+                            startY: drawGame.startY,
+                            endX: mouseX,
+                            endY: mouseY,
+                            colorPen: drawGame.colorPen,
+                    //        timeDelta: Math.abs(time - drawGame.time)
+                        };
 
-                        chat.server.drawServer(data);
+                        drawGame.points.push(data);
 
                         drawGame.startX = mouseX;
                         drawGame.startY = mouseY;
+                   //     drawGame.time = time;
                     }
                 }
             };
@@ -130,7 +144,7 @@
             }
 
             $("#favcolor").change(function () {
-                data.colorPen = $(this).val();
+                drawGame.colorPen = $(this).val();
             });
         });
     </script>
