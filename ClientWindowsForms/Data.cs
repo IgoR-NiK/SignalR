@@ -13,5 +13,6 @@ namespace ClientWindowsForms
         public float EndX { get; set; }        
         public float EndY { get; set; }
         public string ColorPen { get; set; }
+        public int TimeDelta { get; set; }
     }
 }

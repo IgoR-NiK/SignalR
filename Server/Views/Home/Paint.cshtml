@@ -46,9 +46,6 @@
                 // Цвет пера
                 colorPen: "#000000",
 
-                // Время рисования следующей точки
-             //   time: new Date(),
-
                 // начальная точка следующей линии
                 startX: 0,
                 startY: 0,
@@ -68,7 +65,7 @@
                 canvas.addEventListener("mousedown", mousedown, false);
                 canvas.addEventListener("mousemove", mousemove, false);
                 canvas.addEventListener("mouseup", mouseup, false);
-                setInterval(updateServerModel, 100);
+                setInterval(updateServerModel, 75);
             });
 
             function updateServerModel() {
@@ -114,7 +111,6 @@
                     // получаем позиции x и y относительно верхнего левого угла элемента canvas
                     var mouseX = e.layerX || 0;
                     var mouseY = e.layerY || 0;
-                //    var time = new Date();
                     if (!(mouseX == drawGame.startX &&
                         mouseY == drawGame.startY)) {
                         drawLine(ctx, drawGame.startX,
@@ -126,15 +122,13 @@
                             startY: drawGame.startY,
                             endX: mouseX,
                             endY: mouseY,
-                            colorPen: drawGame.colorPen,
-                    //        timeDelta: Math.abs(time - drawGame.time)
+                            colorPen: drawGame.colorPen
                         };
 
                         drawGame.points.push(data);
 
                         drawGame.startX = mouseX;
                         drawGame.startY = mouseY;
-                   //     drawGame.time = time;
                     }
                 }
             };
