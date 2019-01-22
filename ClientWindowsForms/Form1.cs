@@ -33,7 +33,7 @@ namespace ClientWindowsForms
             hubConnection = new HubConnection("http://localhost:51188/signalr");
             hubProxy = hubConnection.CreateHubProxy("MyHub");
             
-            hubProxy.On<string>("sendMessageClient", (message) => txtMessage.Invoke(new Action(() => txtMessages.Text += message + Environment.NewLine)));
+            hubProxy.On<string, string>("sendMessageClient", (name, message) => txtMessages.Invoke(new Action(() => txtMessages.Text += name + " : " + message + Environment.NewLine)));
             hubProxy.On<List<Data>>("drawClient", (e) =>
             {
                 foreach(var point in e)
@@ -46,7 +46,7 @@ namespace ClientWindowsForms
         
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            hubProxy.Invoke("SendMessageServer", txtMessage.Text);
+            hubProxy.Invoke("SendMessageServer", txtName.Text, txtMessage.Text);
             txtMessage.Clear();
         }
 

@@ -8,14 +8,21 @@
     <title>Обмен сообщениями в режиме реального времени</title>
 </head>
 <body>
-    <p>@Html.ActionLink("Скачать клиент Windows Forms", "GetFiles", "Home")</p>
+    <p>@Html.ActionLink("Скачать клиентские приложения Windows Forms и Android.Apk", "GetFiles", "Home")</p>
     <p>@Html.ActionLink("Перейти в режим рисования", "Paint", "Home")</p>
-    
+    <br />
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" />
+    </div>
+    <br />
     <div id="inputForm">
+        <label for="message">Сообщение:</label>
         <input type="text" id="message" />
         <input type="button" id="sendmessage" value="Отправить" />
-    </div>    
-    <p><b>Сообщения</b></p>    
+    </div>
+    <br />
+    <p><b>Сообщения:</b></p>
     <div id="messages"></div>
 
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -36,18 +43,18 @@
 
                 // При нажатии кнопки "Отправить"
                 $('#sendmessage').click(function () {
-                    chat.server.sendMessageServer($('#message').val());  // Вызываем у хаба метод SendMessageServer
+                    chat.server.sendMessageServer($('#name').val(), $('#message').val());  // Вызываем у хаба метод SendMessageServer
                     $('#message').val('');                               // Очищаем текстовое поле
                 });
 
             });
 
             // Функция, которую вызывает хаб
-            chat.client.sendMessageClient = function (message) {
+            chat.client.sendMessageClient = function (name, message) {
 
                 // Добавление сообщений на веб-страницу
-                $('#messages').append('<p>' + message + '</p>');
-            };            
+                $('#messages').append('<p><b>' + name + ':</b> ' + message + '</p>');
+            };
         });
     </script>
 

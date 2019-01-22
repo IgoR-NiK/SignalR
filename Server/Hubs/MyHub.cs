@@ -11,9 +11,9 @@ namespace Server.Hubs
 {
     public class MyHub : Hub
     {
-        public void SendMessageServer(string message)
+        public void SendMessageServer(string name, string message)
         {
-            Clients.All.sendMessageClient(message);
+            Clients.All.sendMessageClient(name, message);
         }
 
         public void DrawServer(List<Data> points)
