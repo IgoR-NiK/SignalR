@@ -31,6 +31,8 @@
 			this.components = new System.ComponentModel.Container();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.txtName = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.txtMessages = new System.Windows.Forms.TextBox();
@@ -42,8 +44,6 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.colorDialog = new System.Windows.Forms.ColorDialog();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.label3 = new System.Windows.Forms.Label();
-			this.txtName = new System.Windows.Forms.TextBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -78,6 +78,23 @@
 			this.tabPage1.Text = "Чат";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// txtName
+			// 
+			this.txtName.Location = new System.Drawing.Point(51, 9);
+			this.txtName.Name = "txtName";
+			this.txtName.Size = new System.Drawing.Size(367, 20);
+			this.txtName.TabIndex = 9;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.label3.Location = new System.Drawing.Point(8, 10);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(37, 16);
+			this.label3.TabIndex = 8;
+			this.label3.Text = "Имя:";
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
@@ -98,7 +115,7 @@
 			// 
 			// txtMessages
 			// 
-			this.txtMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.txtMessages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.txtMessages.Location = new System.Drawing.Point(6, 70);
 			this.txtMessages.Multiline = true;
 			this.txtMessages.Name = "txtMessages";
@@ -181,23 +198,6 @@
 			// 
 			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.label3.Location = new System.Drawing.Point(8, 10);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(37, 16);
-			this.label3.TabIndex = 8;
-			this.label3.Text = "Имя:";
-			// 
-			// txtName
-			// 
-			this.txtName.Location = new System.Drawing.Point(51, 9);
-			this.txtName.Name = "txtName";
-			this.txtName.Size = new System.Drawing.Size(367, 20);
-			this.txtName.TabIndex = 9;
 			// 
 			// Form1
 			// 
