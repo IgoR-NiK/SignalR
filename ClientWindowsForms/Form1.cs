@@ -30,7 +30,7 @@ namespace ClientWindowsForms
             g = picArea.CreateGraphics();
             points = new List<Data>();
 
-            hubConnection = new HubConnection("http://www.chatik-igor.somee.com/signalr");
+            hubConnection = new HubConnection("http://localhost:51188/signalr");
             hubProxy = hubConnection.CreateHubProxy("MyHub");
             
             hubProxy.On<string>("sendMessageClient", (message) => txtMessage.Invoke(new Action(() => txtMessages.Text += message + Environment.NewLine)));
