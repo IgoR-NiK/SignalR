@@ -13,7 +13,14 @@ namespace ClientXamarinForms
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+			MainPage = new TabbedPage()
+			{
+				Children =
+				{
+					new ChatPage() { Title = "Чат" },
+					new NavigationPage(new PaintPage()) { Title = "Рисовалка" }
+				}
+			};
 		}
 
 		protected override void OnStart()

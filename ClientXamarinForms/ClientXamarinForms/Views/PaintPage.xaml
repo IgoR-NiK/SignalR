@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ClientXamarinForms.Views.PaintPage">
+    <ContentPage.Content>        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <BoxView x:Name="boxView"
+                     BackgroundColor="Black"
+                     Margin="5"
+                     WidthRequest="40"
+                     HeightRequest="40"
+                     Grid.Row="1"
+                     Grid.Column="0" />
+
+            <Button Text="Выбрать цвет"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Clicked="BtnChangeColor_Clicked"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
