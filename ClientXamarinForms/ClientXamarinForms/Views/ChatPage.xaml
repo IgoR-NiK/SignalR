@@ -21,7 +21,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <ViewCell.View>
-                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center" Margin="5,0,0,0">
                                     <Label Text="{Binding User, StringFormat='{0}: '}" FontAttributes="Bold" />
                                     <Label Text="{Binding Message}" />
                                 </StackLayout>
