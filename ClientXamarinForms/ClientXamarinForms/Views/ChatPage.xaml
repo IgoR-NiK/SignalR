@@ -13,7 +13,7 @@
 
             <StackLayout Padding="10" Grid.Row="0">
                 <Label FontSize="Small" Text="Имя" VerticalOptions="Center"/>
-                <Entry x:Name="userNameBox" Text="{Binding UserName}" HorizontalOptions="FillAndExpand"/>
+                <Entry Text="{Binding UserName}" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
 
             <ListView ItemsSource="{Binding Messages}" Grid.Row="1">
@@ -35,7 +35,7 @@
                 <Label FontSize="Small" Text="Сообщение" VerticalOptions="Center"/>
                 <Entry HorizontalOptions="FillAndExpand" Text="{Binding Message}"/>
 
-                <Button Text="Отправить" Clicked="BtnSend_Clicked" />
+                <Button Text="Отправить" Command="{Binding SendComman}" />
             </StackLayout> 
         </Grid>
     </ContentPage.Content>
