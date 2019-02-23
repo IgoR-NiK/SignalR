@@ -2,27 +2,31 @@
 <html>
 <head>
     <title>Обмен сообщениями в режиме реального времени</title>
+       
+    <!-- Ссылка на VueJs -->
+    <script src="~/Scripts/vue.min.js"></script>
 </head>
 <body>
     <p>@Html.ActionLink("Скачать клиентские приложения Windows Forms и Android.Apk", "GetFiles", "Home")</p>
     <p>@Html.ActionLink("Перейти в режим рисования", "Paint", "Home")</p>
     <br />
-    <div>
-        <label for="name">Имя:</label>
-        <input type="text" id="name" />
+    <div id="app">
+        <div>
+            <label for="name">Имя:</label>
+            <input type="text" id="name" v-model="name" />
+        </div>
+        <br />
+        <div id="inputForm">
+            <label for="message">Сообщение:</label>
+            <input type="text" id="message" v-model="message" />
+            <button v-on:click="sendMessage">Отправить</button>
+        </div>
+        <br />
+        <p><b>Сообщения:</b></p>
+        <div v-for="elem in messages">
+            <p><b>{{elem.name}}:</b> {{elem.message}}</p>
+        </div>
     </div>
-    <br />
-    <div id="inputForm">
-        <label for="message">Сообщение:</label>
-        <input type="text" id="message" />
-        <input type="button" id="sendmessage" value="Отправить" />
-    </div>
-    <br />
-    <p><b>Сообщения:</b></p>
-    <div id="messages"></div>
-
-    <!-- Ссылка на VueJs -->
-    <script src="~/Scripts/vue.min.js"></script>
 
     <!-- Ссылка на библиотеку jQuery, поскольку скрипт SignalR имеет зависимости от jQuery -->
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -34,29 +38,64 @@
     <script src="~/signalr/hubs"></script>
 
     <script>
-        $(function () {
-            // Ссылка на автоматически-сгенерированный прокси хаба
-            var chat = $.connection.myHub;
-
-            // Открываем соединение
-            $.connection.hub.start().done(function () {
-
-                // При нажатии кнопки "Отправить"
-                $('#sendmessage').click(function () {
-                    chat.server.sendMessageServer($('#name').val(), $('#message').val());  // Вызываем у хаба метод SendMessageServer
-                    $('#message').val('');                               // Очищаем текстовое поле
-                });
-
-            });
-
-            // Функция, которую вызывает хаб
-            chat.client.sendMessageClient = function (name, message) {
-
-                // Добавление сообщений на веб-страницу
-                $('#messages').append('<p><b>' + name + ':</b> ' + message + '</p>');
-            };
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isConnect: false,
+                name: '',
+                message: '',
+                messages: []
+            },
+            methods: {
+                sendMessage: function () {
+                    if (this.isConnect) {
+                        chat.server.sendMessageServer(this.name, this.message); // Вызываем у хаба метод SendMessageServer
+                        this.message = '';                                      // Очищаем текстовое поле
+                    }
+                }
+            }
         });
-    </script>
 
+        // Ссылка на автоматически-сгенерированный прокси хаба
+        var chat = $.connection.myHub;
+
+        // Открываем соединение
+        connect();
+        function connect() {
+            $.connection.hub.start().fail(() => setTimeout(connect, 5000));
+        }
+
+        // Логика переподключения
+        $.connection.hub.stateChanged(function (change) {
+            switch (change.newState) {
+                case $.signalR.connectionState.connected:
+                    app.isConnect = true;
+                    app.messages.push({
+                        name: 'Системное сообщение',
+                        message: 'Вы подключились к чату'
+                    });
+                    break;
+                case $.signalR.connectionState.reconnecting:
+                    app.isConnect = false;
+                    app.messages.push({
+                        name: 'Системное сообщение',
+                        message: 'Произошло отключение от чата. Пытаемся возобновить связь...'
+                    });
+                    break;
+                case $.signalR.connectionState.disconnected:
+                    app.isConnect = false;
+                    setTimeout(connect, 5000);
+                    break;
+            }
+        });
+
+        // Функция, которую вызывает хаб
+        chat.client.sendMessageClient = function (name, message) {
+            app.messages.push({
+                name: name,
+                message: message
+            });
+        };
+    </script>
 </body>
 </html>
