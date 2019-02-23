@@ -18,6 +18,7 @@ namespace ClientWindowsForms
         IHubProxy hubProxy;
 
         List<Data> points;
+		bool isConnect = false;
         bool isDrawing = false;
         float startX = 0;
         float startY = 0;
@@ -30,7 +31,7 @@ namespace ClientWindowsForms
             g = picArea.CreateGraphics();
             points = new List<Data>();
 
-            hubConnection = new HubConnection("http://www.signalrtest.somee.com/signalr");
+            hubConnection = new HubConnection("http://localhost:51188/signalr");
             hubProxy = hubConnection.CreateHubProxy("MyHub");
             
             hubProxy.On<string, string>("sendMessageClient", (name, message) => txtMessages.Invoke(new Action(() => txtMessages.Text += name + " : " + message + Environment.NewLine)));
@@ -41,18 +42,49 @@ namespace ClientWindowsForms
                     DrawLine(point.StartX, point.StartY, point.EndX, point.EndY, point.ColorPen);
                 }                
             });
-            hubConnection.Start();
-        }
+			Connect(null);
+
+			// Логика переподключения
+			hubConnection.StateChanged += change =>
+			{
+				switch (change.NewState) {
+					case Microsoft.AspNet.SignalR.Client.ConnectionState.Connected:
+						isConnect = true;
+						txtMessages.Invoke(new Action(() => txtMessages.Text += $"Системное сообщение : Вы подключились к чату {Environment.NewLine}"));
+						break;
+					case Microsoft.AspNet.SignalR.Client.ConnectionState.Reconnecting:
+						isConnect = false;
+						txtMessages.Invoke(new Action(() => txtMessages.Text += $"Системное сообщение : Произошло отключение от чата. Пытаемся возобновить связь... {Environment.NewLine}"));
+						break;
+					case Microsoft.AspNet.SignalR.Client.ConnectionState.Disconnected:
+						isConnect = false;
+						new System.Threading.Timer(Connect, null, 5000, Timeout.Infinite);
+						break;
+				}
+			};
+		}
+
+		private async void Connect(object param)
+		{
+			try
+			{
+				await hubConnection.Start();
+			}
+			catch (Exception e) { }
+		}
         
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            hubProxy.Invoke("SendMessageServer", txtName.Text, txtMessage.Text);
-            txtMessage.Clear();
+			if (isConnect)
+			{
+				hubProxy.Invoke("SendMessageServer", txtName.Text, txtMessage.Text);
+				txtMessage.Clear();
+			}
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (points.Count > 0)
+            if (isConnect && points.Count > 0)
             {
                 hubProxy.Invoke("DrawServer", points);
                 points.Clear();

@@ -33,7 +33,7 @@ namespace ClientXamarinForms.ViewModels
 
 		public ChatVM()
 		{
-			hubConnection = new HubConnection("http://www.signalrtest.somee.com/signalr");
+			hubConnection = new HubConnection("http://localhost:51188/signalr");
 			hubProxy = hubConnection.CreateHubProxy("MyHub");
 
 			hubProxy.On<string, string>("sendMessageClient", (name, message) => Messages.Add(new MessageData() { User = name, Message = message }));

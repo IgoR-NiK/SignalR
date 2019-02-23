@@ -60,10 +60,7 @@
         var chat = $.connection.myHub;
 
         // Открываем соединение
-        connect();
-        function connect() {
-            $.connection.hub.start().fail(() => setTimeout(connect, 5000));
-        }
+        $.connection.hub.start();
 
         // Логика переподключения
         $.connection.hub.stateChanged(function (change) {
@@ -84,7 +81,7 @@
                     break;
                 case $.signalR.connectionState.disconnected:
                     app.isConnect = false;
-                    setTimeout(connect, 5000);
+                    setTimeout($.connection.hub.start(), 5000);
                     break;
             }
         });

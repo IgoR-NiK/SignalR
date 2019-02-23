@@ -109,10 +109,7 @@
         var chat = $.connection.myHub;
 
         // Открываем соединение
-        connect();
-        function connect() {
-            $.connection.hub.start().fail(() => setTimeout(connect, 5000));
-        }
+        $.connection.hub.start();
 
         function updateServerModel() {
             if (app.isConnect && app.points.length > 0) {
@@ -132,7 +129,7 @@
                     break;
                 case $.signalR.connectionState.disconnected:
                     app.isConnect = false;
-                    setTimeout(connect, 5000);
+                    setTimeout($.connection.hub.start(), 5000);
                     break;
             }
         });
