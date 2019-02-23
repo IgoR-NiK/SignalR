@@ -14,7 +14,16 @@ namespace ClientXamarinForms.ViewModels
 		HubConnection hubConnection;
 		IHubProxy hubProxy;
 
-		public bool IsConnect { get; set; } = false;
+		private bool isConnect = false;
+		public bool IsConnect
+		{
+			get => isConnect;
+			set
+			{
+				isConnect = value;
+				Device.BeginInvokeOnMainThread(() => SendComman.ChangeCanExecute());
+			}
+		}
 		public string UserName { get; set; }
 
 		private string message;
@@ -24,7 +33,7 @@ namespace ClientXamarinForms.ViewModels
 			set
 			{
 				message = value;
-				OnPropertyChanged("Message");
+				OnPropertyChanged();
 			}
 		}
 
@@ -37,7 +46,7 @@ namespace ClientXamarinForms.ViewModels
 			hubConnection = new HubConnection("http://localhost:51188/signalr");
 			hubProxy = hubConnection.CreateHubProxy("MyHub");
 
-			hubProxy.On<string, string>("sendMessageClient", (name, message) => Messages.Add(new MessageData() { User = name, Message = message }));
+			hubProxy.On<string, string>("sendMessageClient", (name, message) => Device.BeginInvokeOnMainThread(() => Messages.Add(new MessageData() { User = name, Message = message })));
 			Connect();
 
 			// Логика переподключения
@@ -47,15 +56,15 @@ namespace ClientXamarinForms.ViewModels
 				{
 					case ConnectionState.Connected:
 						IsConnect = true;
-						Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Вы подключились к чату" });
+						Device.BeginInvokeOnMainThread(() => Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Вы подключились к чату" }));
 						break;
 					case ConnectionState.Reconnecting:
 						IsConnect = false;
-						Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Произошло отключение от чата. Пытаемся возобновить связь..." });
+						Device.BeginInvokeOnMainThread(() => Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Произошло отключение от чата. Пытаемся возобновить связь..." }));
 						break;
 					case ConnectionState.Disconnected:
 						IsConnect = false;
-						Device.StartTimer(TimeSpan.FromSeconds(5), () => { Connect(); return false; });
+						Device.BeginInvokeOnMainThread(() => Device.StartTimer(TimeSpan.FromSeconds(5), () => { Connect(); return false; }));
 						break;
 				}
 			};

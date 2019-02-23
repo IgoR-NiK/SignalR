@@ -58,7 +58,7 @@ namespace ClientWindowsForms
 						break;
 					case Microsoft.AspNet.SignalR.Client.ConnectionState.Disconnected:
 						isConnect = false;
-						new System.Threading.Timer(x => Connect(), null, 5000, Timeout.Infinite);
+						Invoke(new Action(() => new System.Threading.Timer(x => Connect(), null, 5000, Timeout.Infinite)));
 						break;
 				}
 			};
