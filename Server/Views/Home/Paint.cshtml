@@ -25,6 +25,10 @@
     <label for="favcolor">Выбрать цвет пера</label>
     <input type="color" id="favcolor" />
 
+    <!-- Ссылка на VueJs -->
+    <script src="~/Scripts/vue.min.js"></script>
+
+    <!-- Ссылка на библиотеку jQuery, поскольку скрипт SignalR имеет зависимости от jQuery -->
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 
     <!--Ссылка на библиотеку SignalR -->
@@ -49,7 +53,7 @@
                 // начальная точка следующей линии
                 startX: 0,
                 startY: 0,
-            };            
+            };
 
             // контекст элемента canvas
             var canvas = document.getElementById('drawingpad');
@@ -82,7 +86,7 @@
                     drawLine(ctx, e[point].startX, e[point].startY, e[point].endX, e[point].endY, 1, e[point].colorPen);
                 }
             };
-            
+
             // просто рисуем линию
             function drawLine(ctx, x1, y1, x2, y2, thickness, colorPen) {
                 ctx.beginPath();
