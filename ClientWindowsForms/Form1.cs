@@ -42,7 +42,7 @@ namespace ClientWindowsForms
                     DrawLine(point.StartX, point.StartY, point.EndX, point.EndY, point.ColorPen);
                 }                
             });
-			Connect(null);
+			Connect();
 
 			// Логика переподключения
 			hubConnection.StateChanged += change =>
@@ -58,13 +58,13 @@ namespace ClientWindowsForms
 						break;
 					case Microsoft.AspNet.SignalR.Client.ConnectionState.Disconnected:
 						isConnect = false;
-						new System.Threading.Timer(Connect, null, 5000, Timeout.Infinite);
+						new System.Threading.Timer(x => Connect(), null, 5000, Timeout.Infinite);
 						break;
 				}
 			};
 		}
 
-		private async void Connect(object param)
+		private async void Connect()
 		{
 			try
 			{

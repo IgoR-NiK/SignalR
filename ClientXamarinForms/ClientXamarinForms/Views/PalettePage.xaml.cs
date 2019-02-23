@@ -61,7 +61,7 @@ namespace ClientXamarinForms.Views
 					boxView.GestureRecognizers.Add(new TapGestureRecognizer(async view =>
 					{
 						await Navigation.PopModalAsync();
-						MessagingCenter.Send<PalettePage, View>(this, "ColorChanged", view);
+						MessagingCenter.Send(this, "ColorChanged", view.BackgroundColor);
 					}));
 					grid.Children.Add(boxView, j, 0);
 				}

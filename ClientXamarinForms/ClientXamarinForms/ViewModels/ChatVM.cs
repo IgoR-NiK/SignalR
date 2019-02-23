@@ -14,6 +14,7 @@ namespace ClientXamarinForms.ViewModels
 		HubConnection hubConnection;
 		IHubProxy hubProxy;
 
+		public bool IsConnect { get; set; } = false;
 		public string UserName { get; set; }
 
 		private string message;
@@ -37,16 +38,45 @@ namespace ClientXamarinForms.ViewModels
 			hubProxy = hubConnection.CreateHubProxy("MyHub");
 
 			hubProxy.On<string, string>("sendMessageClient", (name, message) => Messages.Add(new MessageData() { User = name, Message = message }));
-			hubConnection.Start();
+			Connect();
+
+			// Логика переподключения
+			hubConnection.StateChanged += change =>
+			{
+				switch (change.NewState)
+				{
+					case ConnectionState.Connected:
+						IsConnect = true;
+						Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Вы подключились к чату" });
+						break;
+					case ConnectionState.Reconnecting:
+						IsConnect = false;
+						Messages.Add(new MessageData() { User = "Системное сообщение", Message = "Произошло отключение от чата. Пытаемся возобновить связь..." });
+						break;
+					case ConnectionState.Disconnected:
+						IsConnect = false;
+						Device.StartTimer(TimeSpan.FromSeconds(5), () => { Connect(); return false; });
+						break;
+				}
+			};
 
 			SendComman = new Command(() =>
 			{
-				if (hubConnection.State == ConnectionState.Connected)
+				if (IsConnect)
 				{
 					hubProxy.Invoke("SendMessageServer", UserName, Message);
 					Message = String.Empty;
 				}
-			});
+			}, () => IsConnect);
+		}
+
+		private async void Connect()
+		{
+			try
+			{
+				await hubConnection.Start();
+			}
+			catch (Exception e) { }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

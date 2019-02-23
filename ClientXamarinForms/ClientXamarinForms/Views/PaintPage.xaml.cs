@@ -17,7 +17,7 @@ namespace ClientXamarinForms.Views
 			InitializeComponent();
 
 			NavigationPage.SetHasNavigationBar(this, false);
-			MessagingCenter.Subscribe<PalettePage, View>(this, "ColorChanged", (page, view) => boxView.BackgroundColor = view.BackgroundColor);
+			MessagingCenter.Subscribe<PalettePage, Color>(this, "ColorChanged", (page, color) => boxView.BackgroundColor = color);
 		}
 
 		private async void BtnChangeColor_Clicked(object sender, EventArgs e)
