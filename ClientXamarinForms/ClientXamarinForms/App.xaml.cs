@@ -21,6 +21,7 @@ namespace ClientXamarinForms
 					new NavigationPage(new PaintPage()) { Title = "Рисовалка" }
 				}
 			};
+			Xamarin.Forms.PlatformConfiguration.AndroidSpecific.TabbedPage.SetIsSwipePagingEnabled(MainPage, false);
 		}
 
 		protected override void OnStart()
